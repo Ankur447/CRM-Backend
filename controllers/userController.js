@@ -1,4 +1,4 @@
-const { createUser, getUserByEmail } = require('../models/register');
+const { createUser, getUserByEmail , addDoctor} = require('../models/register');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 
@@ -48,7 +48,7 @@ const loginUser = async (req, res, next) => {
     }
 
     // Generate a token
-    const token = jwt.sign(
+    const token = jwt.sign(  
       { id: user.id, email: user.email },
       process.env.JWT_SECRET,
       { expiresIn: '1h' }
@@ -60,4 +60,20 @@ const loginUser = async (req, res, next) => {
   }
 };
 
-module.exports = { registerUser, loginUser };
+const addDoctorController = async (req, res) => {
+  const { email } = req.body;
+
+  if (!email) {
+    return res.status(400).json({ error: 'Email is required' });
+  }
+
+  try {
+    const newDoctor = await addDoctor(email);
+    res.status(201).json(newDoctor);
+  } catch (error) {
+    console.error('Error adding new doctor:', error);
+    res.status(500).json({ error: error.message });
+  }
+};
+
+module.exports = { registerUser, loginUser, addDoctorController };
