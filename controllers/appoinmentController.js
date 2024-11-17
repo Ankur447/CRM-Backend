@@ -1,22 +1,33 @@
-const Appointment = require("../models/appoinment")
+const {bookAppointment} = require('../models/appointment')
 
-const createAppoinment = async (req, res) => {
-    const patient = req.body;
-  
-    try {
-      // Call the `appointments` function and wait for the result
-      const result = await Appointment.appointments(patient);
-      res.status(200).json({
-        message: "Appointment created successfully",
-        data: result,
-      });
-    } catch (err) {
-      console.error("Error creating appointment:", err.message);
-      res.status(500).json({
-        message: "Failed to create appointment",
-        error: err.message,
+const bookAppointmentController = async (req, res) => {
+  try {
+    const { patient_id, doctor_id, appointment_date } = req.body;
+    
+    
+    // Validate input
+    if (!patient_id || !doctor_id || !appointment_date) {
+      return res.status(400).json({
+        message: 'Missing required fields: patient_id, doctor_id, appointment_date',
       });
     }
-  };
 
-module.exports = { createAppoinment };  
+    // Call the model function to book the appointment
+    const appointment = await bookAppointment(patient_id, doctor_id, appointment_date);
+    
+
+    return res.status(201).json({
+      message: 'Appointment booked successfully',
+      appointment,
+    });
+  } catch (error) {
+    console.error('Error in booking appointment:', error.message);
+
+    return res.status(500).json({
+      message: 'Failed to book appointment',
+      error: error.message,
+    });
+  }
+};
+
+module.exports = {bookAppointmentController};
