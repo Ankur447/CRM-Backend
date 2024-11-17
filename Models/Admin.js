@@ -16,7 +16,7 @@ const upload = (file, callback) => {
     });
 };
 const download = (req, res) => {
-    const { id } = req.params;
+    const { id } = req.params;                                  
     const sql = "SELECT * FROM Files WHERE id = ?";
 
     connection.query(sql, [id], (err, result) => {

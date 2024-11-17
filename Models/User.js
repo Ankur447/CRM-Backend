@@ -297,9 +297,9 @@ const appointments = async (patient) => {
 
     // 4. Create the appointment
     await connection.query(
-      `INSERT INTO appointments (patient_id, slot_id, appointment_time, status) 
-       VALUES (?, ?, ?, ?);`,
-      [patient_id, slotId, appointment_time, status]
+      `INSERT INTO appointments (patient_id, slot_id,doctor_id, appointment_time, status) 
+       VALUES (?, ?, ?, ? ,?);`,
+      [patient_id, slotId, doctorId, appointment_time, status]
     );
 
     await connection.query('COMMIT'); // Commit the transaction
@@ -349,7 +349,7 @@ const cancelAppointment = async (appointment_id) => {
     // Get the slot_id of the appointment
     const [appointment] = await connection.query(
       `SELECT slot_id 
-       FROM appointment 
+       FROM appointments 
        WHERE appointment_id = ? FOR UPDATE;`,
       [appointment_id]
     );
@@ -362,7 +362,7 @@ const cancelAppointment = async (appointment_id) => {
 
     // Delete the appointment
     await connection.query(
-      `DELETE FROM appointment 
+      `DELETE FROM appointments 
        WHERE appointment_id = ?;`,
       [appointment_id]
     );
@@ -380,37 +380,54 @@ const cancelAppointment = async (appointment_id) => {
   }
 };
 
-const freeSlot = async (slot_id) => {
-  let connection;
 
-  try {
-    connection = await pool.getConnection();
-    await connection.query('START TRANSACTION');
-
-    // Check current bookings for the slot
-    const [slot] = await connection.query(
-      `SELECT current_bookings 
-       FROM timeslots 
-       WHERE slot_id = ? FOR UPDATE;`,
-      [slot_id]
-    );
-
-    if (!slot.length) {
-      throw new Error("Slot not found.");
-    }
-
-    const { current_bookings } = slot[0];
-    if (current_bookings <= 2) {
-      throw new Error("Slot is already free.");
-    }
-
-    // Decrement current bookings and update status
-    const newBookings = current_bookings - 1;
-    const newStatus = 'AVAILABLE';
-
+    // Free the slot
+    const freeSlot = async (slot_id) => {
+      let connection;
     
-
+      try {
+        connection = await pool.getConnection();
+        await connection.query('START TRANSACTION');
     
+        // Check current bookings for the slot
+        const [slot] = await connection.query(
+          `SELECT current_bookings 
+           FROM timeslots 
+           WHERE slot_id = ? FOR UPDATE;`,
+          [slot_id]
+        );
+    
+        if (!slot.length) {
+          throw new Error("Slot not found.");
+        }
+    
+        const { current_bookings } = slot[0];
+        if (current_bookings <= 0) {
+          throw new Error("Slot is already free.");
+        }
+    
+        // Decrement current bookings and update status
+        const newBookings = current_bookings - 1;
+        const newStatus = 'AVAILABLE';
+    
+        await connection.query(
+          `UPDATE timeslots 
+           SET current_bookings = ?, status = ? 
+           WHERE slot_id = ?;`,
+          [newBookings, newStatus, slot_id]
+        );
+    
+        await connection.query('COMMIT');
+        return { message: "Slot freed successfully." };
+      } catch (err) {
+        if (connection) await connection.query('ROLLBACK');
+        throw err;
+      } finally {
+        if (connection) connection.release();
+      }
+    };
+    
+  
 
 // const demo=(patient)=>{
 //     const { patient_id, doctor_id, appointment_date, appointment_time, status, notes } = patient;
