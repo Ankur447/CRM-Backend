@@ -17,7 +17,7 @@ const upload = multer({ storage: multer.memoryStorage() }); // Stores files in m
 
 router.post('/upload', upload.single('file_data'), FileController.UploadFile);
 router.get('/download/:id',FileController.downloadFile)
-router.post('/update',  userController.UpdateUser);
+router.put('/update',  userController.UpdateUser);
 router.post('/appointments',AppointmentController.GetAppointments);
 router.get('/getappointments',AppointmentController.GetallAppointments);
 module.exports = router;

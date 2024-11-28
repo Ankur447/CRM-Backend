@@ -1,19 +1,26 @@
 const User = require('../Models/User');
+const jwt = require('jsonwebtoken');
+const Login = async(req, res) => {
+    const secretKey="mijmimj"
+    const user = req.body;
 
-const Login = (req, res) => {
-    const { email, password } = req.body;
+        try{
+            const result  =  await User.login(user);
+            const token = jwt.sign({ id: result.user.id, email: result.user.email }, secretKey, {
+                expiresIn: '1h',}) // Token expires in 1 hour
+           if(result.status == 200){
+            return res.status(200).json({message:"Logged in",token})
+           }
+           else{
+            throw err
+           }
+           
+          
+        }
+        catch(err){
 
-    User.login({ email, password }, (err, result) => {
-        if (err) {
-            return res.status(500).json({ message: "Error in login", error: err });
+            return res.status(500).json({message:"error logging in",err})
         }
-        
-        if (result && result.token) {
-            res.status(200).json(result);
-        } else {
-            res.status(401).json({ message: "Invalid credentials" });
-        }
-    });
 };
 
 module.exports = { Login };

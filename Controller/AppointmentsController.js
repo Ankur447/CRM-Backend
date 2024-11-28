@@ -1,4 +1,4 @@
-const Appointment =require("../Models/User")
+const Appointment =require("../Models/Appointments")
  // Adjust the path to your Appointment model
 
 const GetAppointments = async (req, res) => {
