@@ -1,22 +1,33 @@
+const { response } = require('express');
 const connection = require('../Config');
 const jwt = require('jsonwebtoken');
+const mysql = require("mysql2/promise");
 
 const secretKey = 'uygyjgyukg'; // Ideally, store this in environment variables
+// Create a MySQL connection pool
+const pool = mysql.createPool({
+  host: "localhost",
+  user: "root",
+  password: "Yash@208",
+  database: "crm",
+  waitForConnections: true,
+  connectionLimit: 10,
+  queueLimit: 0,
+});
 
-// Register function
-const register = (user, callback) => {
-    const { name, email, password } = user;
-    const sql = "INSERT INTO users (name, email, password) VALUES (?, ?, ?)";
-    
-    connection.query(sql, [name, email, password], (err, result) => {
-        if (err) {
-            console.error("Error registering user:", err);
-            callback({ message: "Error registering user", error: err }, null);
-        } else {
-            callback(null, { message: "User registered successfully", result });
-        }
-    });
-};
+const register =(user)=>{
+  const { name, email, password } = user;
+
+       const sql = "INSERT INTO users (name, email, password) VALUES (?, ?, ?)";
+       connection.query(sql, [name, email, password], (err, result) => {
+          if(err){
+            return err
+          }
+          else{
+             res.status(201).json({ message: "User registered successfully" });
+          }
+       })
+}
 
 // Login function
 const login = (user, callback) => {
@@ -210,37 +221,21 @@ class Queue {
     
 
 
-const getappointments = (callback)=>{
+const getappointments = ()=>{
     const sql ="select * from appointments where iscompleted =1"
 
     connection.query(sql,(err,result)=>{
-        if (err) {
-            console.error("Error fetching users:", err);
-            callback({ message: "Error fetching data", error: err }, null);
-        } else {
-            callback(null, result);
-            
-        }
+          
     })
 }
 
-const mysql = require("mysql2/promise");
 
-// Create a MySQL connection pool
-const pool = mysql.createPool({
-  host: "localhost",
-  user: "root",
-  password: "Yash@208",
-  database: "crm",
-  waitForConnections: true,
-  connectionLimit: 10,
-  queueLimit: 0,
-});
+
 
 const startTransaction = async (connection) => {
   await connection.query("START TRANSACTION;");
 };
-
+ 
 const commitTransaction = async (connection) => {
   await connection.query("COMMIT;");
 };

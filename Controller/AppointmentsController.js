@@ -21,7 +21,7 @@ const GetAppointments = async (req, res) => {
 };
 
 module.exports = { GetAppointments };
- GetallAppointments=(req,res)=>{
+ const GetallAppointments=(req,res)=>{
     
     Appointment.getappointments((err,result)=>{
         if(err){

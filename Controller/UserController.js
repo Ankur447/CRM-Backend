@@ -7,7 +7,10 @@ const User = require('../Models/User')
         if (err) {
             return res.status(500).json({ message: "Error registering user", error: err });
         }
-        res.status(201).json({ message: "User registered successfully" });
+        else{
+            res.status(201).json({ message: "User registered successfully" });
+        }
+        
        })
  }
  const UpdateUser = (req,res) =>{
