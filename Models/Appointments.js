@@ -183,6 +183,15 @@ const appointments = async (patient) => {
           if (connection) connection.release();
         }
       };
+
+      
+
+const getappointments = async()=>{
+  const sql = 'select * from appointments';
+
+  const [result] = await connection.execute(sql);
+  return result;
+}
       
   
-      module.exports ={appointments,UpdateAppointmentStatus,cancelAppointment,freeSlot}
+      module.exports ={appointments,UpdateAppointmentStatus,cancelAppointment,freeSlot,getappointments}

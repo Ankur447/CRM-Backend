@@ -8,7 +8,7 @@ const LoginController = require('../Controller/LoginController');
 const DataController = require('../Controller/DataController')
 const FileController = require('../Controller/FileController')
 const AppointmentController = require('../Controller/AppointmentsController')
-
+const DoctorController = require('../Controller/DoctorController')
 // Call the registerUser function with req and res
 router.post('/register',  userController.registerUser);
 router.post('/login',  LoginController.Login);
@@ -20,4 +20,6 @@ router.get('/download/:id',FileController.downloadFile)
 router.put('/update',  userController.UpdateUser);
 router.post('/appointments',AppointmentController.GetAppointments);
 router.get('/getappointments',AppointmentController.GetallAppointments);
+router.post('/toggledoctor/:id',DoctorController.ToggledoctorStatus);
+router.get('/getdoctors/:id',DoctorController.GetDoctorInfo)
 module.exports = router;

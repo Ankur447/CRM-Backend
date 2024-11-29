@@ -20,16 +20,23 @@ const GetAppointments = async (req, res) => {
   }
 };
 
-module.exports = { GetAppointments };
- const GetallAppointments=(req,res)=>{
+ const GetallAppointments= async (req,res)=>{
     
-    Appointment.getappointments((err,result)=>{
-        if(err){
-            res.send(err)
-        }
-        else{
-            res.send(result)
-        }
-    })
-}
+ 
+    
+      try{  const result = await Appointment.getappointments();
+        res.status(200).json({
+          message: "Appointments fetched successfully",
+          data: result,
+        });}
+       catch (err) {
+        console.error("Error fetching appointment:", err.message);
+        res.status(500).json({
+          message: "Failed to fetch appointment",
+          error: err.message,
+        });
+      }
+    
+  }
+
 module.exports = {GetAppointments,GetallAppointments}

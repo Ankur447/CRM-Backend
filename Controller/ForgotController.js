@@ -1,11 +1,13 @@
 const ForgotController = require('../Models/User')
 
-const ForgotUser = (req,res)=>{
+const ForgotUser = async (req,res)=>{
+ const user = req.body
+   
+    try{
+        const result = await ForgotController.forgot(user)
 
-    ForgotController.forgot((err,result)=>{
-        if(err){
-            
-        }
-    })
-    
+    }
+    catch(err){
+
+    }
 }

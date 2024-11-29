@@ -1,5 +1,5 @@
 const jwt = require('jsonwebtoken');
-const secretKey = 'uygyjgyukg'; // Ideally, store this in environment variables
+const secretKey = "nigga"; // Ideally, store this in environment variables
 
 const authMiddleware = (req, res, next) => {
     const token = req.header("Authorization");

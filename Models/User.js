@@ -5,7 +5,7 @@ const jwt = require('jsonwebtoken');
 const mysql = require("mysql2/promise");
 const app = express();
 app.use(express.json());
-const secretKey = 'uygyjgyukg'; // Ideally, store this in environment variables
+const secretKey = 'nigga'; // Ideally, store this in environment variables
 
 connection.on('connect', () => {
   console.log('Connected to the database');
@@ -139,99 +139,4 @@ class Queue {
   }
 
 
-//   const jappointments = (Patient) => {
-//     const { patient_id, doctor_id, appointment_date, appointment_time, status, notes } = Patient;
-//     console.log("Received Patient Data:", appointment_date);  // Log the received patient data
-
-//     // Establish the queue (this part should be outside the function, assuming you want a global queue)
-//     const waitingQueue = new Queue();
-    
-//     // Add patient to the queue
-//     waitingQueue.enqueue(Patient);
-//     console.log(`Patient with ID ${Patient.patient_id} added to waiting queue.`);
-
-//     // Process queue to assign available slots to waiting patients
-//     const processQueue = () => {
-//         const checkSlotsSql = "SELECT * FROM appointments WHERE iscompleted = 1"; // Assuming iscompleted=1 means available slots
-
-//         connection.query(checkSlotsSql, (err, availableSlots) => {
-//             if (err) {
-//                 console.error("Error checking slots:", err);
-//                 return;
-//             }
-
-//             if (availableSlots.length > 0 && !waitingQueue.isEmpty()) {
-//                 // Dequeue patient and assign an available slot
-//                 const patientFromQueue = waitingQueue.dequeue();
-
-//                 const assignSlotSql = `
-//                     INSERT INTO appointments (patient_id, doctor_id, appointment_date, appointment_time, status, notes)
-//                     VALUES (?, ?, ?, ?, ?, ?)
-//                 `;
-
-//                 connection.query(
-//                     assignSlotSql,
-//                     [
-//                         patientFromQueue.patient_id,
-//                         patientFromQueue.doctor_id,
-//                         patientFromQueue.appointment_date,
-//                         patientFromQueue.appointment_time,
-//                         patientFromQueue.status,
-//                         patientFromQueue.notes
-//                     ],
-//                     (err) => {
-//                         if (err) {
-//                             console.error("Error assigning slot:", err);
-//                             return;
-//                         }
-//                         else{
-//                             console.log(`Assigned slot to patient with ID ${patientFromQueue.patient_id}.`);
-//                         }       
-                       
-//                     }
-//                 );
-//             }
-//         });
-//     };
-
-
-  
-    
-
-    // Run queue processing every 5 seconds
-   // setInterval(processQueue, 500);
-
-
-  
-    
-
-
-const getappointments = ()=>{
-    const sql ="select * from appointments where iscompleted =1"
-
-    connection.query(sql,(err,result)=>{
-          
-    })
-}
-
-
-
-
-const startTransaction = async (connection) => {
-  await connection.query("START TRANSACTION;");
-};
- 
-const commitTransaction = async (connection) => {
-  await connection.query("COMMIT;");
-};
-
-const rollbackTransaction = async (connection) => {
-  await connection.query("ROLLBACK;");
-};
-
-
-
-// const demo=(patient)=>{
-//     const { patient_id, doctor_id, appointment_date, appointment_time, status, notes } = patient;
-// }
 module.exports = { register, login, data,forgot,update};
