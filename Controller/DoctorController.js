@@ -31,4 +31,48 @@ const GetDoctorInfo = async (req, res) => {
         return res.status(500).json({ message: "Internal server error", error: err.message });
     }
 };
-module.exports = { ToggledoctorStatus,GetDoctorInfo };
+
+const DoctorRegistration= async (req,res)=>{
+
+    const Doctor = req.body
+    try{
+        const result = await doctor.doctorRgeisteration(Doctor)
+        return res.status(200).json({ message: "Success", data: result[0] });
+          }
+          catch (err) {
+            return res.status(500).json({ message: "Internal server error", error: err.message });
+        }
+   
+}
+
+const DoctorLogin = async (req,res)=>{
+    
+    const secretKey="nigga"
+    const Doctor = req.body;
+
+        try{
+            const result  =  await doctor.doctorLogin(Doctor);
+            let token ;
+            console.log(result.status);
+            
+            // if(!token){
+            //      token = jwt.sign({ id: result.user.id, email: result.user.email }, secretKey, {
+            //         expiresIn: '1h',}) // Token expires in 1 hour
+            // }
+
+           if(result.status == 200){
+            return res.status(200).json({message:"Logged in",token})
+           }
+           else{
+            throw err
+           }
+           
+          
+        }
+        catch(err){
+
+            return res.status(500).json({message:"error logging in",err})
+        }
+    
+}
+module.exports = { ToggledoctorStatus,GetDoctorInfo,DoctorRegistration,DoctorLogin };
