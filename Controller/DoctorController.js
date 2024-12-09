@@ -75,4 +75,19 @@ const DoctorLogin = async (req,res)=>{
         }
     
 }
-module.exports = { ToggledoctorStatus,GetDoctorInfo,DoctorRegistration,DoctorLogin };
+
+const CompleteAppointment = async(req,res)=>{
+    const {id} = req.params 
+  try { 
+    const result = await doctor.completeAppointment(id);
+    return res.status(200).json({message:"appointment completed sucessfully"})
+}
+catch(err){
+    console.log(err);
+    
+    return res.status(500).json({message:err})
+}
+    
+
+}
+module.exports = { ToggledoctorStatus,GetDoctorInfo,DoctorRegistration,DoctorLogin,CompleteAppointment };

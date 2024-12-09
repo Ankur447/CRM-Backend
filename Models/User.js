@@ -12,18 +12,24 @@ connection.on('connect', () => {
 });
 
 // Register function
+const bcrypt = require('bcrypt');
+
 const register = async (user) => {
-  const   { name, email, password } =  user;
+  const { name, email, password } = user;
   const sql = "INSERT INTO users (name, email, password) VALUES (?, ?, ?)";
   console.log(name);
-  
+
   try {
-    const [result] = await  connection.query(sql, [name, email, password]);
+    // Hash the password with a salt (default is 10 rounds)
+    const hashedPassword = await bcrypt.hash(password, 10);
+
+    const [result] = await connection.query(sql, [name, email, hashedPassword]);
     return { message: "User registered successfully", result };
   } catch (err) {
     return { status: 500, message: "Error registering user", error: err };
   }
 };
+
 
 // Login function
 const login = async (user) => {
@@ -39,7 +45,10 @@ const login = async (user) => {
 
     const fetchedUser = results[0];
 
-    if (fetchedUser.password === password) {
+    // Compare the provided password with the hashed password
+    const isPasswordValid = await bcrypt.compare(password, fetchedUser.password);
+
+    if (isPasswordValid) {
       return { status: 200, message: "Logged in successfully", user: fetchedUser };
     } else {
       return { status: 401, message: "Incorrect password" };

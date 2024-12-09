@@ -57,4 +57,12 @@ const doctorLogin = async (doctor) => {
     }
   };
 
-module.exports = {toggledoctorStatus,getDoctorInfo,doctorRgeisteration,doctorLogin}
+  const completeAppointment = async(id)=>{
+
+    const sql = `update appointments set status ="COMPLETED" where appointment_id=?;`
+
+    const result = connection.execute(sql,[id])
+     return result;
+  }
+
+module.exports = {toggledoctorStatus,getDoctorInfo,doctorRgeisteration,doctorLogin,completeAppointment}

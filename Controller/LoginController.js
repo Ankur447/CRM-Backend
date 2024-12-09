@@ -12,6 +12,7 @@ const Login = async(req, res) => {
                     expiresIn: '1h',}) // Token expires in 1 hour
             }
 
+            
            if(result.status == 200){
             return res.status(200).json({message:"Logged in",token})
            }

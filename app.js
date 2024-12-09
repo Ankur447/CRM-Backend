@@ -8,7 +8,7 @@ const route = require('./Routes/Routes')
 const app = express();
 app.use(cors());
 app.use(express.json());
-//app.use(middleware)
+// app.use(middleware)
 
 app.listen(port,()=>{
     console.log(`server started on ${port}`)

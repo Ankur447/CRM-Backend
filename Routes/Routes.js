@@ -24,4 +24,7 @@ router.post('/toggledoctor/:id',DoctorController.ToggledoctorStatus);
 router.get('/getdoctors/:id',DoctorController.GetDoctorInfo)
 router.post('/registerdoctor',DoctorController.DoctorRegistration)
 router.post('/doctorlogin',DoctorController.DoctorLogin)
+router.post('/completeappointment/:id',DoctorController.CompleteAppointment)
+router.get('/getslots/',AppointmentController.GetallSlots);
 module.exports = router;
+

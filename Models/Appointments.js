@@ -10,9 +10,9 @@ const appointments = async (patient) => {
     const { patient_id, name, appointment_time, status } = patient;
     console.log(patient);
   
-    let connection;
+    
     try {
-      connection = await pool.getConnection();
+      
       await connection.query('START TRANSACTION'); // Begin the transaction
   
       // 1. Fetch the doctor ID
@@ -58,6 +58,22 @@ const appointments = async (patient) => {
          VALUES (?, ?, ?, ? ,?);`,
         [patient_id, slotId, doctorId, appointment_time, status]
       );
+
+      await connection.query(`INSERT INTO daily_appointments (
+    appointment_id, patient_id, slot_id, doctor_id, token_number, appointment_time, status, created_at, updated_at
+)
+SELECT
+    appointment_id, patient_id, slot_id, doctor_id, NULL AS token_number, appointment_time, status, created_at, updated_at
+FROM appointments
+WHERE NOT EXISTS (
+    SELECT 1
+    FROM daily_appointments
+    WHERE daily_appointments.appointment_id = appointments.appointment_id
+);
+
+
+
+`)
   
       await connection.query('COMMIT'); // Commit the transaction
       console.log("Appointment successfully created!");
@@ -66,7 +82,7 @@ const appointments = async (patient) => {
       if (connection) await connection.query('ROLLBACK'); // Rollback on error
       throw err;
     } finally {
-      if (connection) connection.release(); // Release the connection
+      //if (connection) connection.release(); // Release the connection
     }
   };
   
@@ -140,10 +156,10 @@ const appointments = async (patient) => {
   
       // Free the slot
       const freeSlot = async (slot_id) => {
-        let connection;
+     
       
         try {
-          connection = await pool.getConnection();
+         
           await connection.query('START TRANSACTION');
       
           // Check current bookings for the slot
@@ -180,7 +196,7 @@ const appointments = async (patient) => {
           if (connection) await connection.query('ROLLBACK');
           throw err;
         } finally {
-          if (connection) connection.release();
+          // if (connection) connection.release();
         }
       };
 
@@ -192,6 +208,15 @@ const getappointments = async()=>{
   const [result] = await connection.execute(sql);
   return result;
 }
+
+const getSlots = async()=>{
+  const sql = 'select * from timeslots';
+
+  const [result] = await connection.execute(sql);
+  return result;
+}
+
+ 
       
   
-      module.exports ={appointments,UpdateAppointmentStatus,cancelAppointment,freeSlot,getappointments}
+      module.exports ={appointments,UpdateAppointmentStatus,cancelAppointment,freeSlot,getappointments,getSlots}
