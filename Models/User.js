@@ -147,5 +147,32 @@ class Queue {
     }
   }
 
+ 
 
-module.exports = { register, login, data,forgot,update};
+const upcomingAppointments = async (id) => {
+  const sql = 'SELECT patient_id FROM patients WHERE user_id = ?';
+  const sql2 = 'SELECT * FROM appointments WHERE patient_id IN (?)';
+
+  try {
+    // Fetch patient_ids for the given user_id
+    const [patientIdsResult] = await connection.query(sql, [id]);
+    const patientIds = patientIdsResult.map(row => row.patient_id);
+
+    if (patientIds.length === 0) {
+      return { message: "No patients found for this user", result: [] };
+    }
+
+    // Fetch appointments for the patient_ids
+    const [appointmentsResult] = await connection.query(sql2, [patientIds]);
+
+    return { message: "Appointments fetched successfully", result: appointmentsResult };
+  } catch (err) {
+    return { status: 500, message: "Error fetching upcoming appointments", error: err };
+  }
+};
+
+module.exports = { upcomingAppointments };
+
+
+
+module.exports = { register, login, data,forgot,update,upcomingAppointments};

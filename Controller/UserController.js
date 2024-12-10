@@ -28,4 +28,22 @@ catch(err){
       return res.status(500).json({ message: "Error updating user", error: err.message });
 
 }}
- module.exports={registerUser,UpdateUser}
+
+const UpcomingAppointents = async (req,res)=>{
+
+  const {id} = req.body;
+    
+    
+
+  try{
+      const result = await User.upcomingAppointments(id)
+      return res.status(200).json(result); 
+       
+  
+  } 
+  catch(err){
+      console.error('Error :fetching Upcoming appointments', err);
+        return res.status(500).json({ message: "Error fetching Upcoming appointments", error: err.message });
+}
+}
+ module.exports={registerUser,UpdateUser,UpcomingAppointents}

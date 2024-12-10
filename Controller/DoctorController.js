@@ -90,4 +90,15 @@ catch(err){
     
 
 }
-module.exports = { ToggledoctorStatus,GetDoctorInfo,DoctorRegistration,DoctorLogin,CompleteAppointment };
+
+const getAllDoctors = async(req,res)=>{
+    try {
+        const result = await doctor.getallDoctors();
+        return res.status(200).json({ message: "Success", data: result });
+    } catch (err) {
+        return res.status(500).json({ message: "Internal server error", error: err.message });
+    }
+
+
+}
+module.exports = { ToggledoctorStatus,GetDoctorInfo,DoctorRegistration,DoctorLogin,CompleteAppointment,getAllDoctors };

@@ -22,6 +22,16 @@ const getDoctorInfo  = async (id)=>{
     const [result] = await connection.execute(sql,[id]);
     return result;
 }
+
+
+const getallDoctors  = async ()=>{
+  const sql = 'select * from doctors;';
+
+  const [result] = await connection.execute(sql);
+  return result;
+}
+
+
 const doctorRgeisteration =async(doctor)=>{
 
     const {name,email,password}= doctor
@@ -65,4 +75,4 @@ const doctorLogin = async (doctor) => {
      return result;
   }
 
-module.exports = {toggledoctorStatus,getDoctorInfo,doctorRgeisteration,doctorLogin,completeAppointment}
+module.exports = {toggledoctorStatus,getDoctorInfo,doctorRgeisteration,doctorLogin,completeAppointment,getallDoctors}

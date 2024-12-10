@@ -9,6 +9,7 @@ const DataController = require('../Controller/DataController')
 const FileController = require('../Controller/FileController')
 const AppointmentController = require('../Controller/AppointmentsController')
 const DoctorController = require('../Controller/DoctorController')
+const PatientController = require('../Controller/PatientController')
 // Call the registerUser function with req and res
 router.post('/register',  userController.registerUser);
 router.post('/login',  LoginController.Login);
@@ -26,5 +27,10 @@ router.post('/registerdoctor',DoctorController.DoctorRegistration)
 router.post('/doctorlogin',DoctorController.DoctorLogin)
 router.post('/completeappointment/:id',DoctorController.CompleteAppointment)
 router.get('/getslots/',AppointmentController.GetallSlots);
+router.get('/getalldoctors',DoctorController.getAllDoctors)
+router.post('/profile',PatientController.createPatientProfile)
+router.post('/upcomingappointments',userController.UpcomingAppointents)
 module.exports = router;
+
+
 
