@@ -59,21 +59,29 @@ const appointments = async (patient) => {
         [patient_id, slotId, doctorId, appointment_time, status,appointment_date]
       );
 
-      await connection.query(`INSERT INTO daily_appointments (
-    appointment_id, patient_id, slot_id, doctor_id, token_number, appointment_time, status, created_at, updated_at
-)
-SELECT
-    appointment_id, patient_id, slot_id, doctor_id, NULL AS token_number, appointment_time, status, created_at, updated_at
-FROM appointments sort by appointment_time
-WHERE NOT EXISTS (
-    SELECT 1
-    FROM daily_appointments
-    WHERE daily_appointments.appointment_id = appointments.appointment_id
-);
-
-
-
-`)
+//       await connection.query(`
+//         INSERT INTO daily_appointments (
+//   appointment_id, patient_id, slot_id, doctor_id, token_number, appointment_time, status, created_at, updated_at
+// )
+// SELECT
+//   a.appointment_id,
+//   a.patient_id,
+//   a.slot_id,
+//   a.doctor_id,
+//   NULL AS token_number,
+//   CONCAT(a.appointment_time, ' ', a.appointment_date) AS appointment_time,  -- Add alias for concatenated value
+//   a.status,
+//   a.created_at,
+//   a.updated_at
+// FROM appointments a
+// WHERE NOT EXISTS (
+//   SELECT 1
+//   FROM daily_appointments d
+//   WHERE d.appointment_id = a.appointment_id
+// )
+// ORDER BY a.appointment_time;
+// `);
+      
   
       await connection.query('COMMIT'); // Commit the transaction
       console.log("Appointment successfully created!");
@@ -203,7 +211,7 @@ WHERE NOT EXISTS (
       
 
 const getappointments = async()=>{
-  const sql = 'select * from appointments';
+  const sql = 'select * from daily_appointments';
   
   const [result] = await connection.execute(sql);
   return result;
