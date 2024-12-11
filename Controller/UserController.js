@@ -32,8 +32,7 @@ catch(err){
 const UpcomingAppointents = async (req,res)=>{
 
   const {id} = req.body;
-    
-    
+
 
   try{
       const result = await User.upcomingAppointments(id)

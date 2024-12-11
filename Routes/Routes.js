@@ -26,7 +26,7 @@ router.get('/getdoctors/:id',DoctorController.GetDoctorInfo)
 router.post('/registerdoctor',DoctorController.DoctorRegistration)
 router.post('/doctorlogin',DoctorController.DoctorLogin)
 router.post('/completeappointment/:id',DoctorController.CompleteAppointment)
-router.get('/getslots/',AppointmentController.GetallSlots);
+router.get('/getslots/:doctor_id',AppointmentController.GetallSlots);
 router.get('/getalldoctors',DoctorController.getAllDoctors)
 router.post('/profile',PatientController.createPatientProfile)
 router.post('/upcomingappointments',userController.UpcomingAppointents)

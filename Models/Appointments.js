@@ -7,7 +7,7 @@ app.use(express.json());
 
 
 const appointments = async (patient) => {
-    const { patient_id, name, appointment_time, status } = patient;
+    const { patient_id, name, appointment_time, status ,appointment_date} = patient;
     console.log(patient);
   
     
@@ -54,9 +54,9 @@ const appointments = async (patient) => {
   
       // 4. Create the appointment
       await connection.query(
-        `INSERT INTO appointments (patient_id, slot_id,doctor_id, appointment_time, status) 
-         VALUES (?, ?, ?, ? ,?);`,
-        [patient_id, slotId, doctorId, appointment_time, status]
+        `INSERT INTO appointments (patient_id, slot_id,doctor_id, appointment_time, status,appointment_date) 
+         VALUES (?, ?, ?, ? ,?,?);`,
+        [patient_id, slotId, doctorId, appointment_time, status,appointment_date]
       );
 
       await connection.query(`INSERT INTO daily_appointments (
@@ -64,7 +64,7 @@ const appointments = async (patient) => {
 )
 SELECT
     appointment_id, patient_id, slot_id, doctor_id, NULL AS token_number, appointment_time, status, created_at, updated_at
-FROM appointments
+FROM appointments sort by appointment_time
 WHERE NOT EXISTS (
     SELECT 1
     FROM daily_appointments
@@ -204,17 +204,36 @@ WHERE NOT EXISTS (
 
 const getappointments = async()=>{
   const sql = 'select * from appointments';
-
+  
   const [result] = await connection.execute(sql);
   return result;
 }
 
-const getSlots = async()=>{
-  const sql = 'select * from timeslots';
+const getSlots = async ({doctor_id}) => {
+  
+  
+console.log(doctor_id);
 
-  const [result] = await connection.execute(sql);
-  return result;
-}
+  if (!doctor_id) {
+    throw new Error("Doctor ID is required to fetch slots.");
+  }
+
+  const sql = 'SELECT * FROM timeslots WHERE doctor_id =?';
+
+  try {
+    const [result] = await connection.execute(sql, [doctor_id]);
+
+    if (result.length === 0) {
+      console.warn(`No slots found for doctor ID: ${doctor_id}`);
+    }
+
+    return result;
+  } catch (err) {
+    console.error(`Error fetching slots for doctor ID ${doctor_id}:`, err.message);
+    throw new Error("Failed to fetch slots from the database.");
+  }
+};
+
 
  
       
