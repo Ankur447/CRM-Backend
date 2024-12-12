@@ -30,9 +30,9 @@ const appointments = async (patient) => {
       const [slotResult] = await connection.query(
         `SELECT slot_id, current_bookings, capacity 
          FROM timeslots 
-         WHERE doctor_id = ? AND status = "AVAILABLE" AND current_bookings < capacity 
+         WHERE doctor_id = ? AND status = "AVAILABLE" AND current_bookings < capacity and start_time = ?
          LIMIT 1 FOR UPDATE;`,
-        [doctorId]
+        [doctorId,appointment_time]
       );
   
       if (slotResult.length === 0) {
@@ -211,7 +211,7 @@ const appointments = async (patient) => {
       
 
 const getappointments = async()=>{
-  const sql = 'select * from daily_appointments';
+  const sql = 'select * from daily_appointments ';
   
   const [result] = await connection.execute(sql);
   return result;
@@ -220,7 +220,7 @@ const getappointments = async()=>{
 const getSlots = async ({doctor_id}) => {
   
   
-console.log(doctor_id);
+console.log(doctor_id); 
 
   if (!doctor_id) {
     throw new Error("Doctor ID is required to fetch slots.");
