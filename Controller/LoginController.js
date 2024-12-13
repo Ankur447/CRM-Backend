@@ -14,7 +14,7 @@ const Login = async(req, res) => {
 
             
            if(result.status == 200){
-            return res.status(200).json({message:"Logged in",token})
+            return res.status(200).json({message:"Logged in",token,result})
            }
            else{
             throw err
