@@ -18,17 +18,18 @@ connection.on('connect', () => {
 const register = async (user) => {
   const { name, email, password } = user;
   const sql = "INSERT INTO users (name, email, password) VALUES (?, ?, ?)";
-  
-  
+ 
 
   try {
     // Hash the password with a salt (default is 10 rounds)
-    const hashedPassword = await bcrypt.hash(password, 10);
-
+    const salt = await bcrypt.genSalt(10);
+    const hashedPassword = await bcrypt.hash(password, salt);
     const [result] = await connection.query(sql, [name, email, hashedPassword]);
-    return { message: "User registered successfully", result };
+
+    return { message: "User registered successfully", userId: result.insertId };
   } catch (err) {
-    return { status: 500, message: "Error registering user", error: err };
+    console.error("Error registering user:", err);
+    return { status: 500, message: "Error registering user", error: err.message };
   }
 };
 
