@@ -23,8 +23,8 @@ const GetAppointments = async (req, res) => {
  const GetallAppointments= async (req,res)=>{
     
  
-    
-      try{  const result = await Appointment.getappointments();
+    const {id}= req.body
+      try{  const result = await Appointment.getappointments(id);
         res.status(200).json({
           message: "Appointments fetched successfully",
           data: result,

@@ -86,7 +86,7 @@ const appointments = async (patient) => {
       await connection.query('COMMIT'); // Commit the transaction
       console.log("Appointment successfully created!");
     } catch (err) {
-      console.error("Error handling appointment:", err.message);
+      console.error("Error handling appointment..:", err.message);
       if (connection) await connection.query('ROLLBACK'); // Rollback on error
       throw err;
     } finally {
@@ -174,7 +174,7 @@ const appointments = async (patient) => {
           const [slot] = await connection.query(
             `SELECT current_bookings 
              FROM timeslots 
-             WHERE slot_id = ? FOR UPDATE;`,
+             WHERE slot_id = ?;`,
             [slot_id]
           );
       
@@ -190,7 +190,7 @@ const appointments = async (patient) => {
           // Decrement current bookings and update status
           const newBookings = current_bookings - 1;
           const newStatus = 'AVAILABLE';
-      
+       
           await connection.query(
             `UPDATE timeslots 
              SET current_bookings = ?, status = ? 
@@ -210,10 +210,10 @@ const appointments = async (patient) => {
 
       
 
-const getappointments = async()=>{
-  const sql = 'select * from daily_appointments ';
+const getappointments = async(id)=>{
+  const sql = 'select * from daily_appointments  where doctor_id =?';
   
-  const [result] = await connection.execute(sql);
+  const [result] = await connection.execute(sql,[id]);
   return result;
 }
 
@@ -241,6 +241,7 @@ console.log(doctor_id);
     throw new Error("Failed to fetch slots from the database.");
   }
 };
+
 
 
  

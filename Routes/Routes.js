@@ -20,7 +20,7 @@ router.post('/upload', upload.single('file_data'), FileController.UploadFile);
 router.get('/download/:id',FileController.downloadFile)
 router.put('/update',  userController.UpdateUser);
 router.post('/appointments',AppointmentController.GetAppointments);
-router.get('/getappointments',AppointmentController.GetallAppointments);
+router.post('/getappointments',AppointmentController.GetallAppointments);
 router.post('/toggledoctor/:id',DoctorController.ToggledoctorStatus);
 router.get('/getdoctors/:id',DoctorController.GetDoctorInfo)
 router.post('/registerdoctor',DoctorController.DoctorRegistration)
@@ -30,6 +30,7 @@ router.get('/getslots/:doctor_id',AppointmentController.GetallSlots);
 router.get('/getalldoctors',DoctorController.getAllDoctors)
 router.post('/profile',PatientController.createPatientProfile)
 router.post('/upcomingappointments',userController.UpcomingAppointents)
+router.post('/getuserid',userController.GetUserID)
 module.exports = router;
 
 

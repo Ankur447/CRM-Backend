@@ -5,6 +5,7 @@ const jwt = require('jsonwebtoken');
 const mysql = require("mysql2/promise");
 const app = express();
 app.use(express.json());
+const bcrypt = require('bcrypt');
 const secretKey = 'nigga'; // Ideally, store this in environment variables
 
 connection.on('connect', () => {
@@ -12,12 +13,14 @@ connection.on('connect', () => {
 });
 
 // Register function
-const bcrypt = require('bcrypt');
+
 
 const register = async (user) => {
   const { name, email, password } = user;
   const sql = "INSERT INTO users (name, email, password) VALUES (?, ?, ?)";
   console.log(name);
+  console.log(email);
+  
 
   try {
     // Hash the password with a salt (default is 10 rounds)
@@ -173,6 +176,23 @@ const upcomingAppointments = async (id) => {
 
 
 
+const getUserId = async(userName)=>{
+
+  const sql = `Select id from users where name = ?`
+
+  try{
+    const [result] = await connection.query(sql,[userName]);
+    return { message: "userid fetched successfully", result: result[0] };
+  }
+  catch(err){
+    return { status: 500, message: "Error fetching userID", error: err };
+
+  }
 
 
-module.exports = { register, login, data,forgot,update,upcomingAppointments};
+}
+
+
+
+
+module.exports = { register, login, data,forgot,update,upcomingAppointments,getUserId};

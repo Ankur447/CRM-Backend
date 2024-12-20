@@ -45,4 +45,24 @@ const UpcomingAppointents = async (req,res)=>{
         return res.status(500).json({ message: "Error fetching Upcoming appointments", error: err.message });
 }
 }
- module.exports={registerUser,UpdateUser,UpcomingAppointents}
+
+const GetUserID = async(req,res)=>{
+  const {userName} = req.body;
+
+  try{
+    const result = await User.getUserId(userName)
+    console.log(result);
+    
+    return res.status(200).json(result); 
+       
+  
+  } 
+  catch(err){
+      console.error('Error :fetching userid', err);
+        return res.status(500).json({ message: "Error fetching userID using userName", error: err.message });
+}
+  
+
+
+}
+ module.exports={registerUser,UpdateUser,UpcomingAppointents,GetUserID}
