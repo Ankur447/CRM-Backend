@@ -31,6 +31,7 @@ router.get('/getalldoctors',DoctorController.getAllDoctors)
 router.post('/profile',PatientController.createPatientProfile)
 router.post('/upcomingappointments',userController.UpcomingAppointents)
 router.post('/getuserid',userController.GetUserID)
+router.post('/appointmentreminder',AppointmentController.AppointmentsReminder)
 module.exports = router;
 
 

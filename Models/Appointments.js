@@ -242,9 +242,36 @@ console.log(doctor_id);
   }
 };
 
+const appointmentsReminder = async (id) => {
+  console.log(id);
+  
+  const sql = 'SELECT patient_id FROM patients WHERE user_id = ?';
+  const sql2 = ` SELECT * 
+  FROM daily_appointments 
+  WHERE patient_id in (11)   AND appointment_time <= DATE_ADD(NOW(), INTERVAL 3 HOUR)
+    AND appointment_time <NOW();`
 
+
+ 
+  try {
+    // Fetch patient_ids for the given user_id
+    const [patientIdsResult] = await connection.query(sql, [id]);
+    const patientIds = patientIdsResult.map(row => row.patient_id);
+
+    if (patientIds.length === 0) {
+      return { message: "No patients found for this user", result: [] };
+    }
+
+    // Fetch appointments for the patient_ids
+    const [appointmentsResult] = await connection.query(sql2, [patientIds]);
+
+    return { message: "Appointments fetched successfully", result: appointmentsResult };
+  } catch (err) {
+    return { status: 500, message: "Error fetching upcoming appointments", error: err };
+  }
+};
 
  
       
   
-      module.exports ={appointments,UpdateAppointmentStatus,cancelAppointment,freeSlot,getappointments,getSlots}
+      module.exports ={appointments,UpdateAppointmentStatus,cancelAppointment,freeSlot,getappointments,getSlots,appointmentsReminder}

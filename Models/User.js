@@ -18,8 +18,7 @@ connection.on('connect', () => {
 const register = async (user) => {
   const { name, email, password } = user;
   const sql = "INSERT INTO users (name, email, password) VALUES (?, ?, ?)";
-  console.log(name);
-  console.log(email);
+  
   
 
   try {
@@ -154,7 +153,7 @@ class Queue {
 
 const upcomingAppointments = async (id) => {
   const sql = 'SELECT patient_id FROM patients WHERE user_id = ?';
-  const sql2 = 'SELECT * FROM appointments WHERE patient_id IN (?)';
+  const sql2 = 'SELECT * FROM appointments WHERE patient_id IN (?) ';
  
   try {
     // Fetch patient_ids for the given user_id
@@ -182,6 +181,8 @@ const getUserId = async(userName)=>{
 
   try{
     const [result] = await connection.query(sql,[userName]);
+    
+    
     return { message: "userid fetched successfully", result: result[0] };
   }
   catch(err){
@@ -191,6 +192,8 @@ const getUserId = async(userName)=>{
 
 
 }
+
+
 
 
 
