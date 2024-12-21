@@ -7,7 +7,7 @@ const port = 3000;
 
 const route = require('./Routes/Routes')
 const app = express();
-app.use(cors());
+app.use(cors({ origin: '*' }));
 app.use(express.json());
 // app.use(middleware)
 
@@ -18,13 +18,4 @@ app.listen(port,()=>{
 app.use('/api/',route);
 require('./cron');
 
-
 module.exports=app
-
-
-
-
-
-
-
-

@@ -18,12 +18,19 @@ connection.on('connect', () => {
 const register = async (user) => {
   const { name, email, password } = user;
   const sql = "INSERT INTO users (name, email, password) VALUES (?, ?, ?)";
- 
 
   try {
-    // Hash the password with a salt (default is 10 rounds)
-    const salt = await bcrypt.genSalt(10);
-    const hashedPassword = await bcrypt.hash(password, salt);
+    let hashedPassword;
+
+    if (password) {
+      // Hash the password with a salt (default is 10 rounds)
+      const salt = await bcrypt.genSalt(10);
+      hashedPassword = await bcrypt.hash(password, salt);
+    } else {
+      // Use a placeholder or null for users without a password
+      hashedPassword = null; // or use a placeholder value like 'OAUTH_USER'
+    }
+
     const [result] = await connection.query(sql, [name, email, hashedPassword]);
 
     return { message: "User registered successfully", userId: result.insertId };
