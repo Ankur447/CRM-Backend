@@ -50,10 +50,10 @@ const UpcomingAppointents = async (req,res)=>{
 }
 
 const GetUserID = async(req,res)=>{
-  const {userName} = req.body;
+  const {email} = req.body;
 
   try{
-    const result = await User.getUserId(userName)
+    const result = await User.getUserId(email)
     console.log(result);
     
     return res.status(200).json(result); 

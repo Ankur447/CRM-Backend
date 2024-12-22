@@ -183,12 +183,12 @@ const upcomingAppointments = async (id) => {
 
 
 
-const getUserId = async(userName)=>{
+const getUserId = async(email)=>{
 
-  const sql = `Select id from users where name = ?`
+  const sql = `Select id from users where email = ?`
 
   try{
-    const [result] = await connection.query(sql,[userName]);
+    const [result] = await connection.query(sql,[email]);
     
     
     return { message: "userid fetched successfully", result: result[0] };
