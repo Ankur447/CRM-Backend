@@ -17,4 +17,21 @@ const createPatientProfile =async(req,res)=>{
     
     }
 }
-module.exports={createPatientProfile}
+
+const GetPatientsByUserId = async(req,res)=>{
+    const {id}= req.body;
+   
+
+    try{
+        const result = await patient.getPatientsByUserId(id)
+        
+        
+        return res.status(200).json(result); 
+         } 
+    catch(err){
+        console.error('Error fetching patients:', err);
+          return res.status(500).json({ message: "Error fetching patients", error: err.message });
+    
+    }
+}
+module.exports={createPatientProfile,GetPatientsByUserId}

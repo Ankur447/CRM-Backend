@@ -1,4 +1,5 @@
 const connection = require('../Config');
+const { completeAppointment } = require('./Doctors');
 
 const createPatientProfile = async (patient) => {
   const { first_name, last_name, email, phone, dob, gender, address, user_id } = patient;
@@ -26,6 +27,25 @@ const createPatientProfile = async (patient) => {
 };
 
 
+const getPatientsByUserId = async(id)=>{
+  
+  
+    const sql =`select * from patients where user_id =?`
+  try{
+    const [result] = await connection.query(sql,[id]);
 
 
-module.exports = { createPatientProfile };
+    return {message :"Patients fetched sucessfully", result}
+
+  }
+  catch(err){
+    return {status:500,message :"error fetching patients",err}
+  }
+
+}
+
+
+
+
+
+module.exports = { createPatientProfile ,getPatientsByUserId};

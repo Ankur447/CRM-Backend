@@ -26,13 +26,14 @@ router.get('/getdoctors/:id',DoctorController.GetDoctorInfo)
 router.post('/registerdoctor',DoctorController.DoctorRegistration)
 router.post('/doctorlogin',DoctorController.DoctorLogin)
 router.post('/completeappointment/:id',DoctorController.CompleteAppointment)
-router.get('/getslots/:doctor_id',AppointmentController.GetallSlots);
+router.post('/getslots',AppointmentController.GetallSlots);
 router.get('/getalldoctors',DoctorController.getAllDoctors)
 router.post('/profile',PatientController.createPatientProfile)
 router.post('/upcomingappointments',userController.UpcomingAppointents)
 router.post('/getuserid',userController.GetUserID)
 router.post('/appointmentreminder',AppointmentController.AppointmentsReminder)
+router.post('/getpatientbyuserid',PatientController.GetPatientsByUserId)
 module.exports = router;
-
+ 
 
 

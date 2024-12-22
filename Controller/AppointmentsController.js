@@ -25,13 +25,16 @@ const GetAppointments = async (req, res) => {
  
     const {id}= req.body
       try{  const result = await Appointment.getappointments(id);
-        res.status(200).json({
+        console.log(result,"i");
+        return res.status(200).json({
           message: "Appointments fetched successfully",
           data: result,
-        });}
+        });
+     
+      }
        catch (err) {
         console.error("Error fetching appointment:", err.message);
-        res.status(500).json({
+        return res.status(500).json({
           message: "Failed to fetch appointment",
           error: err.message,
         });
@@ -43,9 +46,9 @@ const GetAppointments = async (req, res) => {
     
  
     const  doctor_id  = req.params;
+    const slotobj = req.body;
     
-    
-    try{  const result = await Appointment.getSlots(doctor_id);
+    try{  const result = await Appointment.getSlots(slotobj);
       return res.status(200).json({
         message: "slots fetched successfully",
         data: result,

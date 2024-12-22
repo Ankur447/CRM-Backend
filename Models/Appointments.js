@@ -7,95 +7,73 @@ app.use(express.json());
 
 
 const appointments = async (patient) => {
-    const { patient_id, name, appointment_time, status ,appointment_date} = patient;
-    console.log(patient);
-  
-    
-    try {
-      
-      await connection.query('START TRANSACTION'); // Begin the transaction
-  
-      // 1. Fetch the doctor ID
-      const [doctorResult] = await connection.query(
-        'SELECT doctor_id FROM doctors WHERE name = ? AND status = "ACTIVE";',
-        [name]
-      );
-  
-      if (doctorResult.length === 0) {
-        throw new Error("No active doctor found with the given name.");
-      }
-      const doctorId = doctorResult[0].doctor_id;
-  
-      // 2. Fetch an available slot
-      const [slotResult] = await connection.query(
-        `SELECT slot_id, current_bookings, capacity 
-         FROM timeslots 
-         WHERE doctor_id = ? AND status = "AVAILABLE" AND current_bookings < capacity and start_time = ?
-         LIMIT 1 FOR UPDATE;`,
-        [doctorId,appointment_time]
-      );
-  
-      if (slotResult.length === 0) {
-        throw new Error("No available slots for the selected doctor.");
-      }
-  
-      const { slot_id: slotId, current_bookings, capacity } = slotResult[0];
-  
-      // 3. Increment current bookings and update the slot status if necessary
-      const newBookings = current_bookings + 1;
-      const newStatus = newBookings >= capacity ? "BOOKED" : "AVAILABLE";
-  
-      await connection.query(
-        `UPDATE timeslots 
-         SET current_bookings = ?, status = ? 
-         WHERE slot_id = ?;`,
-        [newBookings, newStatus, slotId]
-      );
-  
-      // 4. Create the appointment
-      await connection.query(
-        `INSERT INTO appointments (patient_id, slot_id,doctor_id, appointment_time, status,appointment_date) 
-         VALUES (?, ?, ?, ? ,?,?);`,
-        [patient_id, slotId, doctorId, appointment_time, status,appointment_date]
-      );
+  const { patient_id, name,  status, appointment_date, appointment_time} = patient;
+  console.log(patient);
 
-//       await connection.query(`
-//         INSERT INTO daily_appointments (
-//   appointment_id, patient_id, slot_id, doctor_id, token_number, appointment_time, status, created_at, updated_at
-// )
-// SELECT
-//   a.appointment_id,
-//   a.patient_id,
-//   a.slot_id,
-//   a.doctor_id,
-//   NULL AS token_number,
-//   CONCAT(a.appointment_time, ' ', a.appointment_date) AS appointment_time,  -- Add alias for concatenated value
-//   a.status,
-//   a.created_at,
-//   a.updated_at
-// FROM appointments a
-// WHERE NOT EXISTS (
-//   SELECT 1
-//   FROM daily_appointments d
-//   WHERE d.appointment_id = a.appointment_id
-// )
-// ORDER BY a.appointment_time;
-// `);
-      
-  
-      await connection.query('COMMIT'); // Commit the transaction
-      console.log("Appointment successfully created!");
-    } catch (err) {
-      console.error("Error handling appointment..:", err.message);
-      if (connection) await connection.query('ROLLBACK'); // Rollback on error
-      throw err;
-    } finally {
-      //if (connection) connection.release(); // Release the connection
+  try {
+    await connection.query('START TRANSACTION'); // Begin the transaction
+
+    // 1. Fetch the doctor ID
+    const [doctorResult] = await connection.query(
+      'SELECT doctor_id FROM doctors WHERE name = ? AND status = "ACTIVE";',
+      [name]
+    );
+
+    if (doctorResult.length === 0) {
+      throw new Error("No active doctor found with the given name.");
     }
-  };
-  
-  
-  
+    const doctorId = doctorResult[0].doctor_id;
+
+    // 2. Fetch an available slot schedule for the given date and time
+    const [slotScheduleResult] = await connection.query(
+      `SELECT ss.schedule_id, ts.slot_id, ss.current_bookings, ts.capacity 
+       FROM slot_schedule ss
+       JOIN timeslots ts ON ss.slot_id = ts.slot_id
+       WHERE ss.doctor_id = ? 
+         AND ss.date = ? 
+         AND ts.start_time = ? 
+         AND ss.status = "AVAILABLE" 
+         AND ss.current_bookings < ts.capacity
+       LIMIT 1 FOR UPDATE;`,
+      [doctorId, appointment_date, appointment_time]
+    );
+
+    if (slotScheduleResult.length === 0) {
+      throw new Error("No available slots for the selected doctor on the given date and time.");
+    }
+
+    const { schedule_id: slotScheduleId, current_bookings, capacity } = slotScheduleResult[0];
+
+    // 3. Increment current bookings and update the slot schedule status if necessary
+    const newBookings = current_bookings + 1;
+    const newStatus = newBookings >= capacity ? "BOOKED" : "AVAILABLE";
+
+    await connection.query(
+      `UPDATE slot_schedule 
+       SET current_bookings = ?, status = ? 
+       WHERE schedule_id = ?;`,
+      [newBookings, newStatus, slotScheduleId]
+    );
+
+    // 4. Create the appointment
+    await connection.query(
+      `INSERT INTO appointments (patient_id, doctor_id,appointment_date, appointment_time, status, slot_schedule_id) 
+       VALUES (?, ?, ?,?, ?, ?);`,
+      [patient_id, doctorId,appointment_date, appointment_time, status, slotScheduleId]
+    );
+
+    await connection.query('COMMIT'); // Commit the transaction
+    console.log("Appointment successfully created!");
+  } catch (err) {
+    console.error("Error handling appointment:", err.message);
+    if (connection) await connection.query('ROLLBACK'); // Rollback on error
+    throw err;
+  } finally {
+    // Ensure the connection is closed or released
+    // if (connection) connection.release();
+  }
+};
+
   const UpdateAppointmentStatus = async (req, res) => {
     const { appointment_id, status } = req.body;
   
@@ -217,19 +195,35 @@ const getappointments = async(id)=>{
   return result;
 }
 
-const getSlots = async ({doctor_id}) => {
-  
-  
-console.log(doctor_id); 
 
-  if (!doctor_id) {
+
+
+
+const getSlots = async (slotobj) => {  
+ 
+  const {doctor_id,date} = slotobj;
+  if (!slotobj.doctor_id) {
     throw new Error("Doctor ID is required to fetch slots.");
   }
 
-  const sql = 'SELECT * FROM timeslots WHERE doctor_id =?';
+  const sql =  `SELECT 
+    ts.start_time, 
+    ts.end_time, 
+    ss.schedule_id, 
+    ss.date, 
+    ss.status
+FROM 
+    slot_schedule ss
+JOIN 
+    timeslots ts 
+ON 
+    ss.slot_id = ts.slot_id
+WHERE 
+    ss.doctor_id = ? AND ss.date = ?;
+`;
 
   try {
-    const [result] = await connection.execute(sql, [doctor_id]);
+    const [result] = await connection.execute(sql, [doctor_id,date]);
 
     if (result.length === 0) {
       console.warn(`No slots found for doctor ID: ${doctor_id}`);
@@ -241,6 +235,9 @@ console.log(doctor_id);
     throw new Error("Failed to fetch slots from the database.");
   }
 };
+
+
+
 
 const appointmentsReminder = async (id) => {
   console.log(id);
