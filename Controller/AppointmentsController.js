@@ -42,7 +42,7 @@ const GetAppointments = async (req, res) => {
     
   }
 
-  const GetallSlots= async (req,res)=>{
+  const GetSlotSchedule= async (req,res)=>{
     
  
     const  doctor_id  = req.params;
@@ -83,4 +83,4 @@ const AppointmentsReminder = async (req,res)=>{
         return res.status(500).json({ message: "Error fetching Upcoming appointments", error: err.message });
 }
 }
-module.exports = {GetAppointments,GetallAppointments,GetallSlots,AppointmentsReminder}
+module.exports = {GetAppointments,GetallAppointments,GetSlotSchedule,AppointmentsReminder}

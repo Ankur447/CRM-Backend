@@ -17,5 +17,5 @@ app.listen(port,()=>{
 
 app.use('/api/',route);
 require('./cron');
-
+// require('./Models/Slot')
 module.exports=app

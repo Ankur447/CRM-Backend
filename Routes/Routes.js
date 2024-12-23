@@ -10,6 +10,7 @@ const FileController = require('../Controller/FileController')
 const AppointmentController = require('../Controller/AppointmentsController')
 const DoctorController = require('../Controller/DoctorController')
 const PatientController = require('../Controller/PatientController')
+const SlotController = require('../Controller/SlotController')
 // Call the registerUser function with req and res
 router.post('/register',  userController.registerUser);
 router.post('/login',  LoginController.Login);
@@ -26,13 +27,14 @@ router.get('/getdoctors/:id',DoctorController.GetDoctorInfo)
 router.post('/registerdoctor',DoctorController.DoctorRegistration)
 router.post('/doctorlogin',DoctorController.DoctorLogin)
 router.post('/completeappointment/:id',DoctorController.CompleteAppointment)
-router.post('/getslots',AppointmentController.GetallSlots);
+router.post('/getslots',AppointmentController.GetSlotSchedule);
 router.get('/getalldoctors',DoctorController.getAllDoctors)
 router.post('/profile',PatientController.createPatientProfile)
 router.post('/upcomingappointments',userController.UpcomingAppointents)
 router.post('/getuserid',userController.GetUserID)
 router.post('/appointmentreminder',AppointmentController.AppointmentsReminder)
 router.post('/getpatientbyuserid',PatientController.GetPatientsByUserId)
+router.post('/getslotsbydoctor',SlotController.GetslotsbydoctorID)
 module.exports = router;
  
 

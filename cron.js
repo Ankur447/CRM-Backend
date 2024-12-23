@@ -27,7 +27,7 @@ const updateDailyAppointments = async () => {
 
     // Optional: Truncate the table (use cautiously)
     // Uncomment only if necessary
-    // await connection.query("TRUNCATE TABLE daily_appointments;");
+    await connection.query("TRUNCATE TABLE daily_appointments;");
 
     // Step 2: Insert current day's appointments into `daily_appointments`
     const result = await connection.query(`
