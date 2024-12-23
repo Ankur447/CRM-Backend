@@ -70,7 +70,7 @@ const doctorRgeisteration = async (doctor) => {
     if (err.code === "ER_DUP_ENTRY") {
       return { status: 409, message: "Email already exists." };
     }
-
+ 
     // Log the error and return a generic error message
     console.error("Error registering doctor:", err.message);
     return { status: 500, message: "Error registering doctor", error: err };
