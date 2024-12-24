@@ -3,6 +3,7 @@ const { use } = require('razor');
 const connection = require('../Config')
 const appointment = require ('./Appointments')
 const bcrypt = require('bcrypt');
+const jwt = require('jsonwebtoken');
 
 
 
@@ -120,24 +121,27 @@ const doctorLogin = async (Doctor) => {
  
 
   const completeAppointment = async (id) => {
+    console.log(id);
+    
     try {
       // Update the appointment status to "COMPLETED"
       const updateSql = `UPDATE appointments SET status = "COMPLETED" WHERE appointment_id = ?;`;
-      const selectSql = `SELECT slot_id FROM appointments WHERE appointment_id = ?;`;
+      const selectSql = `SELECT slot_schedule_id FROM appointments WHERE appointment_id = ?;`;
   
       // Execute the update query
-      const [updateResult] = await connection.execute(updateSql, [id]);
-  
+      const [updateResult] = await connection.query(updateSql, [id]);
+      console.log(updateResult);
+      
       // Get the associated slot_id
-      const [rows] = await connection.execute(selectSql, [id]);
-      const slotId = rows[0]?.slot_id; // Safely access the slot_id
+      // const [rows] = await connection.query(selectSql, [id]);
+      // const slotId = rows[0]?.slot_schedule_id; // Safely access the slot_id
   
-      if (!slotId) {
-        throw new Error("Slot ID not found for the given appointment ID.");
-      }
+      // if (!slotId) {
+      //   throw new Error("Slot ID not found for the given appointment ID.");
+      // }
   
       // Free the slot using the `appointment` module
-      await appointment.freeSlot(slotId);
+      // await appointment.freeSlot(slotId);
   
       return updateResult;
     } catch (error) {

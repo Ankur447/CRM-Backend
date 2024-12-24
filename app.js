@@ -5,11 +5,12 @@ const middleware = require('./Middleware/authMiddleware')
 const cron = require('node-cron');
 const port = 3000;
 
-const route = require('./Routes/Routes')
+const route = require('./Routes/Routes');
+const authMiddleware = require('./Middleware/authMiddleware');
 const app = express();
 app.use(cors({ origin: '*' }));
 app.use(express.json());
-// app.use(middleware)
+//app.use(authMiddleware)
 
 app.listen(port,()=>{
     console.log(`server started on ${port}`)

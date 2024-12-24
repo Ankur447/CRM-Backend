@@ -8,7 +8,7 @@ const Login = async(req, res) => {
             const result  =  await User.login(user);
             let token ;
             if(!token){
-                 token = jwt.sign({ id: result.user.id, email: result.user.email }, secretKey, {
+                 token = jwt.sign({ id: result.user.id, email: result.user.email , role :"user" }, secretKey, {
                     expiresIn: '1h',}) // Token expires in 1 hour
             }
 

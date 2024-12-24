@@ -57,6 +57,8 @@ const login = async (user) => {
 
     // Compare the provided password with the hashed password
     const isPasswordValid = await bcrypt.compare(password, fetchedUser.password);
+   
+
 
     if (isPasswordValid) {
       return { status: 200, message: "Logged in successfully", user: fetchedUser };

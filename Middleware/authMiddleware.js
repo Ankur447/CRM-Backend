@@ -6,7 +6,7 @@ const authMiddleware = (req, res, next) => {
     if (exemptRoutes.includes(req.path)) {
         return next(); // Skip authentication for exempt routes
     }
-
+        
     const token = req.header("Authorization");
 
     if (!token) {
@@ -19,10 +19,12 @@ const authMiddleware = (req, res, next) => {
     try {
         // Verify and decode the token
         const decoded = jwt.verify(tokenWithoutBearer, secretKey);
-
+        console.log("eeee");
+        
         // Attach the decoded user info to the request object
         req.user = decoded;
-
+          
+            
         // Call the next middleware or route handler
         next();
     } catch (err) {
