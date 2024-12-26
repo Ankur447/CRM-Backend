@@ -3,7 +3,7 @@ const pool = require('mysql2/promise'); // Ensure you use the correct database c
 const cron = require('node-cron');
 
 const getslotsbydoctorId = async (id) => {
-  console.log(id);
+ 
   
   const sql = `SELECT * FROM timeslots where doctor_id=?`;
   try {

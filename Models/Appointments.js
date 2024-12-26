@@ -8,7 +8,7 @@ app.use(express.json());
 
 const appointments = async (patient) => {
   const { patient_id, name,  status, appointment_date, appointment_time} = patient;
-  console.log(patient);
+  
 
   try {
     await connection.query('START TRANSACTION'); // Begin the transaction
@@ -240,13 +240,16 @@ WHERE
 
 
 const appointmentsReminder = async (id) => {
-  console.log(id);
+ 
   
   const sql = 'SELECT patient_id FROM patients WHERE user_id = ?';
+  // const sql2 = ` SELECT * 
+  // FROM daily_appointments 
+  // WHERE patient_id in (?)   AND appointment_time <= DATE_ADD(NOW(), INTERVAL 1 HOUR)
+  //   AND appointment_time >NOW();`
   const sql2 = ` SELECT * 
   FROM daily_appointments 
-  WHERE patient_id in (?)   AND appointment_time <= DATE_ADD(NOW(), INTERVAL 15 HOUR)
-    AND appointment_time >NOW();`
+  WHERE patient_id in (?);`
 
 
  

@@ -163,7 +163,7 @@ class Queue {
 
 const upcomingAppointments = async (id) => {
   const sql = 'SELECT patient_id FROM patients WHERE user_id = ?';
-  const sql2 = 'SELECT * FROM appointments WHERE patient_id IN (?) ';
+  const sql2 = 'SELECT * FROM appointments WHERE patient_id IN (22) and appointment_date >= curdate() and appointment_time >curtime();';
  
   try {
     // Fetch patient_ids for the given user_id
@@ -176,6 +176,7 @@ const upcomingAppointments = async (id) => {
 
     // Fetch appointments for the patient_ids
     const [appointmentsResult] = await connection.query(sql2, [patientIds]);
+  
 
     return { message: "Appointments fetched successfully", result: appointmentsResult };
   } catch (err) {

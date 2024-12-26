@@ -54,7 +54,7 @@ const GetUserID = async(req,res)=>{
 
   try{
     const result = await User.getUserId(email)
-    console.log(result);
+   
     
     return res.status(200).json(result); 
        

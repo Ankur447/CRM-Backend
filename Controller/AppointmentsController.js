@@ -25,7 +25,7 @@ const GetAppointments = async (req, res) => {
  
     const {id}= req.body
       try{  const result = await Appointment.getappointments(id);
-        console.log(result,"i");
+       
         return res.status(200).json({
           message: "Appointments fetched successfully",
           data: result,
@@ -68,7 +68,7 @@ const AppointmentsReminder = async (req,res)=>{
 
   
   const {id} = req.body;
-  console.log(id);
+  
   
 
 
