@@ -245,8 +245,8 @@ const appointmentsReminder = async (id) => {
   const sql = 'SELECT patient_id FROM patients WHERE user_id = ?';
   const sql2 = ` SELECT * 
   FROM daily_appointments 
-  WHERE patient_id in (11)   AND appointment_time <= DATE_ADD(NOW(), INTERVAL 3 HOUR)
-    AND appointment_time <NOW();`
+  WHERE patient_id in (?)   AND appointment_time <= DATE_ADD(NOW(), INTERVAL 15 HOUR)
+    AND appointment_time >NOW();`
 
 
  
@@ -267,6 +267,7 @@ const appointmentsReminder = async (id) => {
     return { status: 500, message: "Error fetching upcoming appointments", error: err };
   }
 };
+
 
  
       

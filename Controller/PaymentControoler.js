@@ -5,8 +5,12 @@ const client = new Client({
   accessToken: "EAAAl-EAAAl-kdAdObAj0okDxpiYHDS3cR5ymcHE1uP4iU64vm3t1OuQqlvOJmgCtbA4J4", // Replace with your access token
 });
 
-const processPayment = async (req, res) => {
-  const { nonce, amount } = req.body; // 'nonce' is generated on the client-side
+/**
+ * Process a payment using the Square API.
+ */
+const ProcessPayment = async (req, res) => {
+  const { nonce, amount } = req.body;
+
   const idempotencyKey = require("crypto").randomUUID(); // Unique key for this transaction
 
   try {
@@ -15,21 +19,24 @@ const processPayment = async (req, res) => {
       idempotencyKey,
       amountMoney: {
         amount: parseInt(amount * 100), // Amount in cents
-        currency: "USD", // Change to your desired currency
+        currency: "USD", // Adjust currency as needed
       },
     });
 
-    res.status(200).json({
+    console.log("Payment processed successfully:", response.result.payment);
+
+    return res.status(200).json({
       success: true,
       payment: response.result.payment,
     });
-  } catch (error) {
-    console.error("Payment Error:", error);
-    res.status(500).json({
-      success: false,
-      message: error.message,
+  } catch (err) {
+    console.error("Error processing payment:", err);
+
+    return res.status(500).json({
+      message: "Error processing payment",
+      error: err.message,
     });
   }
 };
 
-module.exports = { processPayment };
+module.exports = { ProcessPayment };

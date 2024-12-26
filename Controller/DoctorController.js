@@ -78,7 +78,7 @@ const DoctorLogin = async (req, res) => {
 
     let token;
     if (!token) {
-        token = jwt.sign({ id: result.user.id, email: result.user.email, role: "user" }, secretKey, {
+        token = jwt.sign({ id: result.doctor_id, email: result.user.email, role: "user" }, secretKey, {
             expiresIn: '1h',
         }) // Token expires in 1 hour
     }

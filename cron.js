@@ -34,24 +34,25 @@ const updateDailyAppointments = async () => {
       INSERT INTO daily_appointments (
           appointment_id, 
           patient_id, 
-          slot_schedule_id, 
           doctor_id, 
           appointment_date,
           appointment_time, 
           status, 
           created_at, 
-          updated_at
+          updated_at,
+          slot_schedule_id
       )
       SELECT 
           a.appointment_id,
           a.patient_id,
-          a.slot_schedule_id, -- Using slot_schedule_id directly as slot_id
+          
           a.doctor_id,
           a.appointment_date,
-          CONCAT(a.appointment_date, ' ', a.appointment_time) AS appointment_time, -- Concatenating appointment_date and appointment_time
+          a.appointment_time,
           a.status,
           a.created_at,
-          a.updated_at
+          a.updated_at,
+          a.slot_schedule_id -- Using slot_schedule_id directly as slot_id
       FROM appointments a
       WHERE a.appointment_date = CURDATE()
       ORDER BY a.appointment_time;
