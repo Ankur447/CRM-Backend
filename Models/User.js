@@ -163,7 +163,7 @@ class Queue {
 
 const upcomingAppointments = async (id) => {
   const sql = 'SELECT patient_id FROM patients WHERE user_id = ?';
-  const sql2 = 'SELECT * FROM appointments WHERE patient_id IN (22) and appointment_date >= curdate() and appointment_time >curtime();';
+  const sql2 = 'SELECT * FROM appointments WHERE patient_id IN (?) and appointment_date >= curdate() and appointment_time >curtime();';
  
   try {
     // Fetch patient_ids for the given user_id
