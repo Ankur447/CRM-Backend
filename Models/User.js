@@ -7,6 +7,7 @@ const app = express();
 app.use(express.json());
 const bcrypt = require('bcrypt');
 const secretKey = 'nigga'; // Ideally, store this in environment variables
+const patient = require('./Patient')
 
 connection.on('connect', () => {
   console.log('Connected to the database');
@@ -176,9 +177,9 @@ const upcomingAppointments = async (id) => {
 
     // Fetch appointments for the patient_ids
     const [appointmentsResult] = await connection.query(sql2, [patientIds]);
-  
+    const [patientResult]  = await patient.getPatientDetails(patientIds);
 
-    return { message: "Appointments fetched successfully", result: appointmentsResult };
+    return { message: "Appointments fetched successfully", result: appointmentsResult,patientResult };
   } catch (err) {
     return { status: 500, message: "Error fetching upcoming appointments", error: err };
   }
@@ -204,9 +205,35 @@ const getUserId = async(email)=>{
 
 }
 
+const getappointmentsbyuserID = async(id)=>{
+ 
+  const sql = 'SELECT patient_id FROM patients WHERE user_id = ?';
+  const sql2 = 'SELECT * FROM appointments WHERE patient_id IN (?);';
+ 
+  try {
+    // Fetch patient_ids for the given user_id
+    const [patientIdsResult] = await connection.query(sql, [id]);
+    const patientIds = patientIdsResult.map(row => row.patient_id);
+
+    if (patientIds.length === 0) {
+      return { message: "No patients found for this user", result: [] };
+    }
+
+    // Fetch appointments for the patient_ids
+    const [appointmentsResult] = await connection.query(sql2, [patientIds]);
+    const [patientResult]  = await patient.getPatientDetails(patientIds);
+
+    return { message: "Appointments fetched successfully", result: appointmentsResult,patientResult };
+  } catch (err) {
+    return { status: 500, message: "Error fetching upcoming appointments", error: err };
+  }
+};
+  
+  
 
 
 
 
 
-module.exports = { register, login, data,forgot,update,upcomingAppointments,getUserId};
+
+module.exports = { register, login, data,forgot,update,upcomingAppointments,getUserId,getappointmentsbyuserID};

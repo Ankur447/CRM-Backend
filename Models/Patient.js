@@ -45,7 +45,19 @@ const getPatientsByUserId = async(id)=>{
 }
 
 
+const getPatientDetails = async ([patient_id]) =>{
+    const sql =`select * from patients where patient_id in (?)`
+    try{
+      const [patientResult] = await connection.query(sql,[patient_id]);
+      return patientResult
+    }
+    catch(err){
+      return err;
+    }
+}
 
 
 
-module.exports = { createPatientProfile ,getPatientsByUserId};
+
+
+module.exports = { createPatientProfile ,getPatientsByUserId,getPatientDetails};

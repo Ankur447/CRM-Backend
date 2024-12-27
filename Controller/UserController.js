@@ -65,7 +65,28 @@ const GetUserID = async(req,res)=>{
         return res.status(500).json({ message: "Error fetching userID using userName", error: err.message });
 }
   
-
-
 }
- module.exports={registerUser,UpdateUser,UpcomingAppointents,GetUserID}
+
+
+const GetAppointmentsByUserId= async (req,res)=>{
+    
+ 
+  const {id}= req.body
+    try{  const result = await User.getappointmentsbyuserID(id);
+     
+      return res.status(200).json({
+        message: "Appointments fetched successfully",
+        data: result,
+      });
+   
+    }
+     catch (err) {
+      console.error("Error fetching appointment:", err.message);
+      return res.status(500).json({
+        message: "Failed to fetch appointment",
+        error: err.message,
+      });
+    }
+  
+}
+ module.exports={registerUser,UpdateUser,UpcomingAppointents,GetUserID,GetAppointmentsByUserId}

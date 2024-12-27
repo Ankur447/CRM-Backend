@@ -249,7 +249,7 @@ const appointmentsReminder = async (id) => {
   //   AND appointment_time >NOW();`
   const sql2 = ` SELECT * 
   FROM daily_appointments 
-  WHERE patient_id in (?);`
+  WHERE patient_id in (?) and appointment_time > curtime();`
 
 
  
