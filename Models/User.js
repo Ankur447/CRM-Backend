@@ -164,7 +164,7 @@ class Queue {
 
 const upcomingAppointments = async (id) => {
   const sql = 'SELECT patient_id FROM patients WHERE user_id = ?';
-  const sql2 = 'SELECT * FROM appointments WHERE patient_id IN (?) and appointment_date >= curdate() and appointment_time >curtime();';
+  const sql2 = 'SELECT * FROM appointments join patients on appointments.patient_id = patients.patient_id WHERE appointments.patient_id IN (?) and appointment_date >= curdate() and appointment_time >curtime();;';
  
   try {
     // Fetch patient_ids for the given user_id
@@ -225,7 +225,7 @@ const getappointmentsbyuserID = async(id)=>{
     const [appointmentsResult] = await connection.query(sql2, [patientIds]);
     const patientResult  = await patient.getPatientDetails(patientIds);
     console.log(patientResult);
-
+ 
     return appointmentsResult
   } catch (err) {
     return { status: 500, message: "Error fetching upcoming appointments", error: err };

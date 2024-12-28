@@ -2,11 +2,11 @@ const connection = require('../Config');
 const { completeAppointment } = require('./Doctors');
 
 const createPatientProfile = async (patient) => {
-  const { first_name, last_name, email, phone, dob, gender, address, user_id } = patient;
+  const { first_name, last_name, email, phone, dob, gender, address, user_id,age} = patient;
 
   // Adjust the SQL query to match the table schema
-  const sql = `INSERT INTO patients (first_name, last_name, email, phone, dob, gender, address, user_id) 
-               VALUES (?, ?, ?, ?, ?, ?, ?, ?)`;
+  const sql = `INSERT INTO patients (first_name, last_name, email, phone, dob, gender, address, user_id,age) 
+               VALUES (?, ?, ?, ?, ?, ?, ?, ?,?)`;
 
   try {
     const result = await connection.query(sql, [
@@ -17,7 +17,8 @@ const createPatientProfile = async (patient) => {
       dob,
       gender,
       address,
-      user_id
+      user_id,
+      age
     ]);
 
     return { message: "Patient created successfully", result };
@@ -40,7 +41,7 @@ const getPatientsByUserId = async(id)=>{
   }
   catch(err){
     return {status:500,message :"error fetching patients",err}
-  }
+  } 
 
 }
 
