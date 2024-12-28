@@ -45,10 +45,12 @@ const getPatientsByUserId = async(id)=>{
 }
 
 
-const getPatientDetails = async ([patient_id]) =>{
+const getPatientDetails = async (patient_id) =>{
     const sql =`select * from patients where patient_id in (?)`
     try{
       const [patientResult] = await connection.query(sql,[patient_id]);
+      
+      console.log(patientResult);
       return patientResult
     }
     catch(err){

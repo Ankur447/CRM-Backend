@@ -178,6 +178,8 @@ const upcomingAppointments = async (id) => {
     // Fetch appointments for the patient_ids
     const [appointmentsResult] = await connection.query(sql2, [patientIds]);
     const [patientResult]  = await patient.getPatientDetails(patientIds);
+    
+    
 
     return { message: "Appointments fetched successfully", result: appointmentsResult,patientResult };
   } catch (err) {
@@ -208,7 +210,7 @@ const getUserId = async(email)=>{
 const getappointmentsbyuserID = async(id)=>{
  
   const sql = 'SELECT patient_id FROM patients WHERE user_id = ?';
-  const sql2 = 'SELECT * FROM appointments WHERE patient_id IN (?);';
+  const sql2 = 'select * from appointments join patients on appointments.patient_id=patients.patient_id where appointments.patient_id in(?)';
  
   try {
     // Fetch patient_ids for the given user_id
@@ -221,9 +223,10 @@ const getappointmentsbyuserID = async(id)=>{
 
     // Fetch appointments for the patient_ids
     const [appointmentsResult] = await connection.query(sql2, [patientIds]);
-    const [patientResult]  = await patient.getPatientDetails(patientIds);
+    const patientResult  = await patient.getPatientDetails(patientIds);
+    console.log(patientResult);
 
-    return { message: "Appointments fetched successfully", result: appointmentsResult,patientResult };
+    return appointmentsResult
   } catch (err) {
     return { status: 500, message: "Error fetching upcoming appointments", error: err };
   }
