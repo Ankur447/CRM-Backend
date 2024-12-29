@@ -272,7 +272,4 @@ const appointmentsReminder = async (id) => {
 };
 
 
- 
-      
-  
-      module.exports ={appointments,UpdateAppointmentStatus,cancelAppointment,freeSlot,getappointments,getSlots,appointmentsReminder}
+  module.exports ={appointments,UpdateAppointmentStatus,cancelAppointment,freeSlot,getappointments,getSlots,appointmentsReminder}

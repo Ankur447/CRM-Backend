@@ -1,7 +1,7 @@
 
-const user = require('../Middleware/authMiddleware')
+const user = require('../Models/Auth0')
 
     const AuthController = async(req,res)=>{
 
-        const result = user
+        const result = user.getAuth0AccessToken();
     }
