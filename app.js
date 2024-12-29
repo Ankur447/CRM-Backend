@@ -1,25 +1,37 @@
 const express = require('express');
+const app = express();
 const cors = require('cors')
 const connection = require('./Config');
-const middleware = require('./Middleware/authMiddleware')
+
 const cron = require('node-cron');
 const port = 3000;
 const bodyParser = require("body-parser");
-
-
 const route = require('./Routes/Routes');
 const authMiddleware = require('./Middleware/authMiddleware');
-const app = express();
+
 app.use(cors({ origin: '*' }));
+
+app.options('*', (req, res) => {
+    res.header('Access-Control-Allow-Origin', 'http://localhost:5173');
+    res.header('Access-Control-Allow-Headers', 'Authorization, Content-Type');
+    res.send();
+});
+
 app.use(express.json());
-//app.use(authMiddleware)
 app.use(bodyParser.json());
 
-app.listen(port,()=>{
-    console.log(`server started on ${port}`)
-})
+app.use(authMiddleware);
+// Apply routes first
+app.use('/api/', route);
 
-app.use('/api/',route);
+// Apply authMiddleware AFTER routes
+
+
+app.listen(port, () => {
+    console.log(`server started on ${port}`);
+});
+
 require('./cron');
+
 
 module.exports=app
