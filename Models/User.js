@@ -115,14 +115,16 @@ const update = async (user) => {
   try {
     // Hash the token provided in the request
     const hashedToken = crypto.createHash("sha256").update(token).digest("hex");
+    console.log(hashedToken);
     
     
 
     // Check if the token exists and is valid
-    const sql = `SELECT * FROM password_reset_tokens 
-                 JOIN users ON users.id = password_reset_tokens.user_id 
+    const sql = `SELECT * FROM users 
+                 JOIN password_reset_tokens ON users.id = password_reset_tokens.user_id 
                  WHERE users.email = ? 
                    AND password_reset_tokens.token = ? 
+                   AND  password_reset_tokens.expires_at > CURRENT_TIME()
                    `;
     const [result] = await connection.query(sql, [email, hashedToken]);
 
@@ -308,7 +310,7 @@ const sendPasswordResetEmail = async (userEmail) => {
 
     console.log("Password reset email sent successfully");
   } catch (error) {
-    console.error("Error sending password reset email:", error.message);
+    console.error("Error sending password reset email:", error.message,error);
   }
 };
 
