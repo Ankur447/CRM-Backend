@@ -4,7 +4,7 @@ const jwksClient = require('jwks-rsa');
 // Replace with your actual Auth0 domain and audience
 const AUTH0_DOMAIN = 'dev-btad0jdv6jenv1st.us.auth0.com';
 const AUDIENCE = 'https://dev-btad0jdv6jenv1st.us.auth0.com/api/v2/'; // Auth0 Audience
-const EXEMPT_ROUTES = ['/api/login', '/api/register', '/api/doctorlogin', '/api/registerdoctor']; // Routes that don't require auth
+const EXEMPT_ROUTES = ['/api/login', '/api/register', '/api/doctorlogin', '/api/registerdoctor','/api/resetpassword','/api/update']; // Routes that don't require auth
 const SECRET_KEY = 'nigga'; // Replace with a secure key in production (use env variables)
 
 const client = jwksClient({
