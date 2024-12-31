@@ -293,8 +293,13 @@ const sendPasswordResetEmail = async (userEmail) => {
     const resetURL = `https://localhost:5173/passwordreset/reset-password?token=${resetToken}`;
 
     // 5. Save the token and expiration in the password_reset_tokens table
-    const sqlInsert = `INSERT INTO password_reset_tokens (user_id, token, expires_at) VALUES (?, ?, ?) 
-                       ON DUPLICATE KEY UPDATE token = ?, expires_at = ?`;
+    const sqlInsert = `INSERT INTO password_reset_tokens (user_id, token, expires_at) 
+VALUES (?, ?, ADDTIME(CURRENT_TIME(), '00:15:00')) 
+ON DUPLICATE KEY UPDATE 
+    token = VALUES(token), 
+    expires_at = ADDTIME(CURRENT_TIME(), '00:15:00');
+
+`;
     await connection.query(sqlInsert, [user.id, hashedToken, new Date(expirationTime), hashedToken, new Date(expirationTime)]);
 
     // 6. Send the email
