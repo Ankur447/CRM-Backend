@@ -13,7 +13,7 @@ const AppointmentController = require('../Controller/AppointmentsController')
 const DoctorController = require('../Controller/DoctorController')
 const PatientController = require('../Controller/PatientController')
 const SlotController = require('../Controller/SlotController')
-const PaymentController = require('../Controller/PaymentControoler')
+const PaymentController = require('../Controller/PaymentController')
 // Call the registerUser function with req and res
 router.post('/register',  userController.registerUser);
 router.post('/login',  LoginController.Login);
@@ -39,7 +39,7 @@ router.post('/appointmentreminder',AppointmentController.AppointmentsReminder)
 router.post('/getpatientbyuserid',PatientController.GetPatientsByUserId)
 router.post('/getslotsbydoctor',SlotController.GetslotsbydoctorID)
 router.post('/setschedule',SlotController.SetSchedule)
-router.post('/processpayment',PaymentController.ProcessPayment)
+router.post('/processpayment',PaymentController.CreateOrder)
 router.post('/getappointmentsbyuserid',userController.GetAppointmentsByUserId)
 router.post('/resetpassword',userController.SendPasswordResetEmail)
 module.exports = router;

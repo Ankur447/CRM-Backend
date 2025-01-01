@@ -294,10 +294,10 @@ const sendPasswordResetEmail = async (userEmail) => {
 
     // 5. Save the token and expiration in the password_reset_tokens table
     const sqlInsert = `INSERT INTO password_reset_tokens (user_id, token, expires_at) 
-VALUES (?, ?, ADDTIME(CURRENT_TIME(), '00:15:00')) 
-ON DUPLICATE KEY UPDATE 
-    token = VALUES(token), 
-    expires_at = ADDTIME(CURRENT_TIME(), '00:15:00');
+              VALUES (?, ?, ADDTIME(CURRENT_TIME(), '00:15:00')) 
+              ON DUPLICATE KEY UPDATE 
+              token = VALUES(token), 
+              expires_at = ADDTIME(CURRENT_TIME(), '00:15:00');
 
 `;
     await connection.query(sqlInsert, [user.id, hashedToken, new Date(expirationTime), hashedToken, new Date(expirationTime)]);
