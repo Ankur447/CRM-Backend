@@ -42,6 +42,7 @@ router.post('/setschedule',SlotController.SetSchedule)
 router.post('/processpayment',PaymentController.CreateOrder)
 router.post('/getappointmentsbyuserid',userController.GetAppointmentsByUserId)
 router.post('/resetpassword',userController.SendPasswordResetEmail)
+router.get('/getprices',PaymentController.GetAppointmentPrices)
 module.exports = router;
  
 
