@@ -43,8 +43,6 @@ const createOrder=async (paymentObj) => {
     }
 };
 
-// Start the Express server
-const port = process.env.PORT || 3000;
 
 
 module.exports={createOrder}
