@@ -31,14 +31,16 @@ const createOrder=async (paymentObj) => {
   };
 
   // Call Cashfree's PGCreateOrder method
-  Cashfree.PGCreateOrder("2025-01-01", request)
-    .then((response) => {
-      return(response.data);  // Respond with the order data received from Cashfree
-    })
-    .catch((error) => {
+  const response = await Cashfree.PGCreateOrder("2025-01-01", request)
+ 
+    
+    try {
+      return response.data
+      
+    } catch (error) {
       console.error("Error setting up order request:", error.response ? error.response.data : error.message);
-      return error
-    });
+      return error;
+    }
 };
 
 // Start the Express server

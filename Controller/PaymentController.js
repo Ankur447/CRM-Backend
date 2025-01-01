@@ -8,9 +8,11 @@ const CreateOrder = async (req, res) => {
   try {
      
     result = await Payment.createOrder(paymentObj)
-
+    console.log(result);
+    
     return res.status(200).json({
-      success: result,
+     response: result,
+     message:"order created"
      
     });
   } catch (err) {
