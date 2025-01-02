@@ -1,19 +1,37 @@
 const express = require('express');
-const userRoutes = require('./routes/userRoutes'); // Combined routes
-const errorHandler = require('./middleware/errorMiddleware');
-require('dotenv').config();
-const cors = require('cors');
-
 const app = express();
+const cors = require('cors')
+const connection = require('./Config');
+
+const cron = require('node-cron');
+const port = 3000;
+const bodyParser = require("body-parser");
+const route = require('./Routes/Routes');
+const authMiddleware = require('./Middleware/authMiddleware');
+
+app.use(cors({ origin: '*' }));
+
+app.options('*', (req, res) => {
+    res.header('Access-Control-Allow-Origin', 'http://localhost:5173');
+    res.header('Access-Control-Allow-Headers', 'Authorization, Content-Type');
+    res.send();
+});
 
 app.use(express.json());
-app.use(cors({
-    origin: '*',
-    credentials: true,
-    methods: ["GET", "POST", "PUT", "DELETE"],
-  }));
-// Use combined user routes
+app.use(bodyParser.json());
 
-app.use('/api/users', userRoutes);
-app.use(errorHandler);
-module.exports = app;
+app.use(authMiddleware);
+// Apply routes first
+app.use('/api/', route);
+
+// Apply authMiddleware AFTER routes
+
+
+app.listen(port, () => {
+    console.log(`server started on ${port}`);
+});
+
+require('./cron');
+
+
+module.exports=app

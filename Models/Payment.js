@@ -1,12 +1,9 @@
 const express = require("express");
 const { Cashfree } = require("cashfree-pg");
-<<<<<<< Updated upstream
 require("dotenv").config(); // To load environment variables from .env file
-=======
 const { connect } = require("../Config");
 require("dotenv").config();  // To load environment variables from .env file
 const connection = require('../Config')
->>>>>>> Stashed changes
 
 // To parse JSON request bodies
 
@@ -48,9 +45,7 @@ const createOrder = async (paymentObj) => {
 };
 
 
-<<<<<<< Updated upstream
 module.exports = { createOrder };
-=======
   getAppointmentPrices =async()=>{
     const sql = `select * from appointment_prices;`
     try {
@@ -65,4 +60,3 @@ module.exports = { createOrder };
 
 
 module.exports={createOrder,getAppointmentPrices}
->>>>>>> Stashed changes
