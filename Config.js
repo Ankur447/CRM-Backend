@@ -1,17 +1,17 @@
 const mysql = require('mysql2/promise');
-
+require('dotenv').config();
 // Create a connection pool
 const pool = mysql.createPool({
-    host: 'localhost',
-    port: 3306,
-    user: 'root',
-    password: 'Yash@208',
-    database: 'CRM',
-    waitForConnections: true,
-    connectionLimit: 10,
-    queueLimit: 0,
-    timezone: 'Z', // Ensure the database uses the correct timezone
-});
+    host: process.env.DB_HOST,
+    port: process.env.DB_PORT,
+    user: process.env.DB_USER,
+    password: process.env.DB_PASSWORD,
+    database: process.env.DB_DATABASE,
+    waitForConnections: process.env.DB_WAIT_FOR_CONNECTIONS === 'true',
+    connectionLimit: parseInt(process.env.DB_CONNECTION_LIMIT),
+    queueLimit: parseInt(process.env.DB_QUEUE_LIMIT),
+    timezone: process.env.DB_TIMEZONE
+  });
 
 // Test connection and log confirmation
 (async () => {
