@@ -1,4 +1,4 @@
-const mysql = require('mysql2');
+const mysql = require('mysql2/promise');
 require('dotenv').config();
 
 
@@ -13,7 +13,7 @@ const pool = mysql.createPool({
     waitForConnections: process.env.DB_WAIT_FOR_CONNECTIONS === 'true',
     connectionLimit: parseInt(process.env.DB_CONNECTION_LIMIT),
     queueLimit: parseInt(process.env.DB_QUEUE_LIMIT),
-    timezone: process.env.DB_TIMEZONE
+    timezone: process.env.DB_TIMEZONE,
 });
 
 // Test connection and log confirmation with a Promise wrapper
