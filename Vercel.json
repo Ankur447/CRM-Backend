@@ -1,15 +1,23 @@
 {
-    "version": 2,
-    "builds": [
-      {
-        "src": "api/server.js",
-        "use": "@vercel/node",
-        "config": {
-          "includeFiles": ["routes/**", "Config.js", "middleware/**"]
-        }
+  "version": 2,
+  "builds": [
+    {
+      "src": "api/server.js",
+      "use": "@vercel/node",
+      "config": {
+        "includeFiles": [
+          "routes/**",
+          "Config.js",
+          "middleware/**",
+          "cron.js"
+        ]
       }
-    ],
-    "routes": [
-    { "src": "/(.*)", "dest": "/api/server.js" }
+    }
+  ],
+  "routes": [
+    {
+      "src": "/api/(.*)",
+      "dest": "/api/server.js"
+    }
   ]
-  }
+}
