@@ -11,13 +11,14 @@ const authMiddleware = require('./Middleware/authMiddleware');
 app.use(cors({ origin: '*' }));
 app.use(express.json());
 app.use(bodyParser.json());
-
-app.use(authMiddleware)
-app.use('/api/',route);
-// Test route
+//Test route
 app.get('/getout', (req, res) => {
   return res.status(200).json({ message: "Hello from Express.js!" });
 });
+
+app.use(authMiddleware)
+app.use('/api/',route);
+
 
 
 
