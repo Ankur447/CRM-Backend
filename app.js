@@ -21,6 +21,8 @@ app.use(express.json());
 app.use(bodyParser.json());
 
 app.use(authMiddleware);
+app.use(webhookRouter);
+
 // Apply routes first
 app.use('/api/', route);
 
