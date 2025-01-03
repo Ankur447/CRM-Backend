@@ -2,6 +2,8 @@ const express = require('express');
 const app = express();
 const cors = require('cors')
 const connection = require('./Config');
+const { webhookRouter } = require("./Models/Payment");
+
 
 const cron = require('node-cron');
 const port = 3000;
@@ -19,7 +21,9 @@ app.options('*', (req, res) => {
 
 app.use(express.json());
 app.use(bodyParser.json());
-
+app.get("/getout",(req,res)=>{
+    return res.status(200).json({message:"oh hell naw"})
+})
 app.use(authMiddleware);
 app.use(webhookRouter);
 
