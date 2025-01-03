@@ -31,5 +31,8 @@
     "razor": "^1.1.1",
     "request": "^2.88.2",
     "square": "^39.1.1"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.7"
   }
 }
