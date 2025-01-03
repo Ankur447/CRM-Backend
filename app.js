@@ -21,9 +21,26 @@ app.options('*', (req, res) => {
 
 app.use(express.json());
 app.use(bodyParser.json());
-app.get("/getout",(req,res)=>{
+app.get('/getout',(req,res)=>{
     return res.status(200).json({message:"oh hell naw"})
 })
+app.post("/webhook/cashfree", (req, res) => {
+  const CASHFREE_SECRET = process.env.CASHFREE_SECRET; // Environment variable for the secret key
+  const signature = req.headers["x-webhook-signature"];
+  const payload = JSON.stringify(req.body);
+
+  // Validate the signature
+  const hmac = crypto.createHmac("sha256", CASHFREE_SECRET).update(payload).digest("base64");
+  if (signature !== hmac) {
+    return res.status(400).send("Invalid signature");
+  }
+
+  // Process the webhook payload
+  console.log("Webhook payload received:", req.body);
+
+  res.status(200).send("Webhook received");
+});
+
 app.use(authMiddleware);
 app.use(webhookRouter);
 
