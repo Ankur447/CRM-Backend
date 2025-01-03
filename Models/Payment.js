@@ -1,18 +1,19 @@
 const express = require("express");
+const crypto = require("crypto");
 const { Cashfree } = require("cashfree-pg");
+const { connect } = require("../Config"); // Assuming '../Config' exports the DB connection
 require("dotenv").config(); // To load environment variables from .env file
-const { connect } = require("../Config");
-require("dotenv").config();  // To load environment variables from .env file
-const connection = require('../Config')
 
-// To parse JSON request bodies
+const router = express.Router(); // Use router for modular endpoints
 
-// Set the environment and credentials
-Cashfree.XClientId = process.env.CashFreeAppId;
-Cashfree.XClientSecret = process.env.CashFreeSecretKey;
-Cashfree.XEnvironment = Cashfree.Environment.SANDBOX; // Change to PRODUCTION when ready\
+// Cashfree Credentials
+Cashfree.XClientId = process.env.CASHFREE_APP_ID;
+Cashfree.XClientSecret = process.env.CASHFREE_SECRET_KEY;
+Cashfree.XEnvironment = process.env.NODE_ENV === "production" 
+    ? Cashfree.Environment.PRODUCTION 
+    : Cashfree.Environment.SANDBOX;
 
-// POST endpoint to create an order
+// Function to create an order
 const createOrder = async (paymentObj) => {
   const { orderId, orderAmount, customerName, customerEmail, customerPhone } = paymentObj;
 
@@ -32,9 +33,8 @@ const createOrder = async (paymentObj) => {
   };
 
   try {
-    const response = await Cashfree.PGCreateOrder("2025-01-01", request); 
+    const response = await Cashfree.PGCreateOrder("2025-01-01", request);
     return response.data;
-    
   } catch (error) {
     console.error(
       "Error response data:",
@@ -44,19 +44,39 @@ const createOrder = async (paymentObj) => {
   }
 };
 
+// Function to get appointment prices
+const getAppointmentPrices = async () => {
+  const sql = `SELECT * FROM appointment_prices;`;
+  try {
+    const [result] = await connect.query(sql);
+    return result;
+  } catch (error) {
+    console.error("Error fetching appointment prices:", error);
+    return error;
+  }
+};
 
-module.exports = { createOrder };
-  getAppointmentPrices =async()=>{
-    const sql = `select * from appointment_prices;`
-    try {
-      const [result] = await connection.query(sql)
-      return result;
+// Webhook route
+router.post("/webhook/cashfree", (req, res) => {
+  const CASHFREE_SECRET = process.env.CASHFREE_SECRET; // Environment variable for the secret key
+  const signature = req.headers["x-webhook-signature"];
+  const payload = JSON.stringify(req.body);
 
-    } catch (error) {
-        console.log(error)
-        return error;
-    }
+  // Validate the signature
+  const hmac = crypto.createHmac("sha256", CASHFREE_SECRET).update(payload).digest("base64");
+  if (signature !== hmac) {
+    return res.status(400).send("Invalid signature");
   }
 
+  // Process the webhook payload
+  console.log("Webhook payload received:", req.body);
 
-module.exports={createOrder,getAppointmentPrices}
+  res.status(200).send("Webhook received");
+});
+
+// Export the functions and router
+module.exports = {
+  createOrder,
+  getAppointmentPrices,
+  webhookRouter: router,
+};
