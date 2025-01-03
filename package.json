@@ -1,9 +1,9 @@
 {
   "name": "crm-backend",
   "version": "1.0.0",
-  "main": "server.js",
+  "main": "api/server.js",
   "scripts": {
-    "start": "nodemon server.js",
+    "start": "nodemon api/server.js",
     "dev": "pm2 start nodemon --watch app.js -- --exec node"
   },
   "keywords": [],
