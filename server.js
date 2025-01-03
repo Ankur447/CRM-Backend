@@ -23,8 +23,6 @@ app.use('/api/',route);
 
 
 
-// Apply routes
-app.use('/api/', route);
 
 // Apply 404 handler
 app.use((req, res) => {
